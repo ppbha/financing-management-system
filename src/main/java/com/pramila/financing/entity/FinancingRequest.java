@@ -1,11 +1,17 @@
 package com.pramila.financing.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.swing.*;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class FinancingRequest {
 
     @Id
@@ -25,10 +31,7 @@ public class FinancingRequest {
     private FinancingRequestStatus status;
 
     @Column(precision = 19, scale = 2, nullable = false)
-    private BigInteger requestedAmount;
-
-//    @Column(precision = 5, scale = 2, nullable = false)
-//    private BigInteger appliedInterestRate;
+    private BigDecimal requestedAmount;
 
     @Column(nullable = false)
     private Integer tenureMonths;
