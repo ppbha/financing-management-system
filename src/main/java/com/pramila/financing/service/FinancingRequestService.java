@@ -7,6 +7,7 @@ import com.pramila.financing.entity.FinancingRequest;
 import com.pramila.financing.entity.FinancingRequestStatus;
 import com.pramila.financing.exceptions.CustomerNotFoundException;
 import com.pramila.financing.exceptions.FinancingProductNotFoundException;
+import com.pramila.financing.exceptions.InvalidFinancingRequestException;
 import com.pramila.financing.repository.CustomerRepository;
 import com.pramila.financing.repository.FinancingProductRepository;
 import com.pramila.financing.repository.FinancingRequestRepository;
@@ -37,11 +38,11 @@ public class FinancingRequestService {
 
         if(requestedAmount.compareTo(product.getMinAmount()) < 0 || //using compareTo() because requestedAmount is in BigDecimal so java won't allow normal operators
         requestedAmount.compareTo(product.getMaxAmount()) > 0){
-            throw new IllegalArgumentException("RequestedAmount must be between "+product.getMinAmount()+" and "+product.getMaxAmount());
+            throw new InvalidFinancingRequestException("RequestedAmount must be between "+product.getMinAmount()+" and "+product.getMaxAmount());
         }
 
         if(tenureMonths < product.getMinTenureMonths() || tenureMonths > product.getMaxTenureMonths()){
-            throw new IllegalArgumentException("RequestedAmount must be between "+product.getMinTenureMonths()+" and "+product.getMinTenureMonths());
+            throw new InvalidFinancingRequestException("RequestedAmount must be between "+product.getMinTenureMonths()+" and "+product.getMinTenureMonths());
         }
 
         FinancingRequest request = new FinancingRequest();
