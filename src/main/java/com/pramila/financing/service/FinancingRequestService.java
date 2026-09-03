@@ -5,6 +5,8 @@ import com.pramila.financing.entity.Customer;
 import com.pramila.financing.entity.FinancingProduct;
 import com.pramila.financing.entity.FinancingRequest;
 import com.pramila.financing.entity.FinancingRequestStatus;
+import com.pramila.financing.exceptions.CustomerNotFoundException;
+import com.pramila.financing.exceptions.FinancingProductNotFoundException;
 import com.pramila.financing.repository.CustomerRepository;
 import com.pramila.financing.repository.FinancingProductRepository;
 import com.pramila.financing.repository.FinancingRequestRepository;
@@ -28,8 +30,10 @@ public class FinancingRequestService {
     }
 
     public FinancingRequest createFinancingRequest(Long customerId, Long productId, BigDecimal requestedAmount, Integer tenureMonths){
-        Customer customer = customerRepository.findById(customerId).orElseThrow();
-        FinancingProduct product = financingProductRepository.findById(productId).orElseThrow();
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()->
+                new CustomerNotFoundException("Customer not founf with id: "+ customerId));
+        FinancingProduct product = financingProductRepository.findById(productId).orElseThrow(()->
+                new FinancingProductNotFoundException("Product with Id "+productId+" not found"));
 
         if(requestedAmount.compareTo(product.getMinAmount()) < 0 || //using compareTo() because requestedAmount is in BigDecimal so java won't allow normal operators
         requestedAmount.compareTo(product.getMaxAmount()) > 0){
