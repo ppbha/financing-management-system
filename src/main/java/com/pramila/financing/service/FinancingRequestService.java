@@ -1,6 +1,7 @@
 package com.pramila.financing.service;
 
 
+import com.pramila.financing.dto.CreateFinancingRequestDto;
 import com.pramila.financing.entity.Customer;
 import com.pramila.financing.entity.FinancingProduct;
 import com.pramila.financing.entity.FinancingRequest;
@@ -30,27 +31,32 @@ public class FinancingRequestService {
         this.financingRequestRepository = financingRequestRepository;
     }
 
-    public FinancingRequest createFinancingRequest(Long customerId, Long productId, BigDecimal requestedAmount, Integer tenureMonths){
-        Customer customer = customerRepository.findById(customerId).orElseThrow(()->
-                new CustomerNotFoundException("Customer not founf with id: "+ customerId));
-        FinancingProduct product = financingProductRepository.findById(productId).orElseThrow(()->
-                new FinancingProductNotFoundException("Product with Id "+productId+" not found"));
+    public FinancingRequest createFinancingRequest(CreateFinancingRequestDto dto){
+        Customer customer = customerRepository.findById(dto.getCustomerId()).orElseThrow(()->
+                new CustomerNotFoundException("Customer not found with id: "+ dto.getCustomerId()));
+        FinancingProduct product = financingProductRepository.findById(dto.getProductId()).orElseThrow(()->
+                new FinancingProductNotFoundException("Product with Id "+dto.getProductId()+" not found"));
 
-        if(requestedAmount.compareTo(product.getMinAmount()) < 0 || //using compareTo() because requestedAmount is in BigDecimal so java won't allow normal operators
-        requestedAmount.compareTo(product.getMaxAmount()) > 0){
+        if(dto.getRequestedAmount().compareTo(product.getMinAmount()) < 0 || //using compareTo() because requestedAmount is in BigDecimal so java won't allow normal operators
+        dto.getRequestedAmount().compareTo(product.getMaxAmount()) > 0){
             throw new InvalidFinancingRequestException("RequestedAmount must be between "+product.getMinAmount()+" and "+product.getMaxAmount());
         }
 
-        if(tenureMonths < product.getMinTenureMonths() || tenureMonths > product.getMaxTenureMonths()){
-            throw new InvalidFinancingRequestException("RequestedAmount must be between "+product.getMinTenureMonths()+" and "+product.getMinTenureMonths());
-        }
+        if(dto.getTenureMonths() < product.getMinTenureMonths() || dto.getTenureMonths() > product.getMaxTenureMonths()){
+            throw new InvalidFinancingRequestException(
+                    "Tenure must be between "
+                            + product.getMinTenureMonths()
+                            + " and "
+                            + product.getMaxTenureMonths()
+                            + " months"
+            );        }
 
         FinancingRequest request = new FinancingRequest();
         request.setCustomer(customer);
         request.setProduct(product);
-        request.setRequestedAmount(requestedAmount);
-        request.setTenureMonths(tenureMonths);
-        request.setStatus(FinancingRequestStatus.CANCELLED);
+        request.setRequestedAmount(dto.getRequestedAmount());
+        request.setTenureMonths(dto.getTenureMonths());
+        request.setStatus(FinancingRequestStatus.SUBMITTED);
         FinancingRequest savedRequest = financingRequestRepository.save(request);
 
     return savedRequest;
