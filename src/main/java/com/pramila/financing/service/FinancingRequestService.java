@@ -15,7 +15,8 @@ import com.pramila.financing.repository.FinancingProductRepository;
 import com.pramila.financing.repository.FinancingRequestRepository;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.util.List;
+
 
 @Service
 public class FinancingRequestService {
@@ -76,5 +77,13 @@ public class FinancingRequestService {
         response.setUpdatedAt(request.getUpdatedAt());
 
         return response;
+    }
+
+    public List<FinancingRequestResponseDto> getRequestByCustomer(Long customerId){
+        List<FinancingRequest> requests = financingRequestRepository.findByCustomerCustomerId(customerId);
+
+        return  requests.stream()
+                .map((this::mapToResponseDto))
+                .toList();
     }
 }
