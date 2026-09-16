@@ -16,7 +16,7 @@ public class FinancingProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productId;
+    private Long productId;
 
     private String productName;
 

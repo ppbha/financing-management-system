@@ -2,6 +2,7 @@ package com.pramila.financing.controller;
 
 
 import com.pramila.financing.dto.CreateFinancingRequestDto;
+import com.pramila.financing.dto.FinancingRequestResponseDto;
 import com.pramila.financing.entity.FinancingRequest;
 import com.pramila.financing.service.FinancingRequestService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class FinancingRequestController {
     }
 
     @PostMapping
-    public FinancingRequest createFinancingRequest(@RequestBody @Valid CreateFinancingRequestDto dto){
+    public FinancingRequestResponseDto createFinancingRequest(@RequestBody @Valid CreateFinancingRequestDto dto){
         return financingRequestService.createFinancingRequest(dto);
     }
 

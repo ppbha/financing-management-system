@@ -2,6 +2,7 @@ package com.pramila.financing.service;
 
 
 import com.pramila.financing.dto.CreateFinancingRequestDto;
+import com.pramila.financing.dto.FinancingRequestResponseDto;
 import com.pramila.financing.entity.Customer;
 import com.pramila.financing.entity.FinancingProduct;
 import com.pramila.financing.entity.FinancingRequest;
@@ -31,7 +32,7 @@ public class FinancingRequestService {
         this.financingRequestRepository = financingRequestRepository;
     }
 
-    public FinancingRequest createFinancingRequest(CreateFinancingRequestDto dto){
+    public FinancingRequestResponseDto createFinancingRequest(CreateFinancingRequestDto dto){
         Customer customer = customerRepository.findById(dto.getCustomerId()).orElseThrow(()->
                 new CustomerNotFoundException("Customer not found with id: "+ dto.getCustomerId()));
         FinancingProduct product = financingProductRepository.findById(dto.getProductId()).orElseThrow(()->
@@ -59,6 +60,21 @@ public class FinancingRequestService {
         request.setStatus(FinancingRequestStatus.SUBMITTED);
         FinancingRequest savedRequest = financingRequestRepository.save(request);
 
-    return savedRequest;
+    return mapToResponseDto(savedRequest);
+    }
+
+    private FinancingRequestResponseDto mapToResponseDto(FinancingRequest request){
+        FinancingRequestResponseDto response = new FinancingRequestResponseDto();
+
+        response.setRequestId(request.getRequestId());
+        response.setCustomerId(request.getCustomer().getCustomerId());
+        response.setProductId(request.getProduct().getProductId());
+        response.setRequestedAmount(request.getRequestedAmount());
+        response.setTenureMonths(request.getTenureMonths());
+        response.setStatus(request.getStatus());
+        response.setCreatedAt(request.getCreatedAt());
+        response.setUpdatedAt(request.getUpdatedAt());
+
+        return response;
     }
 }
