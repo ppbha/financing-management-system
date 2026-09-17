@@ -3,7 +3,7 @@ package com.pramila.financing.controller;
 
 import com.pramila.financing.dto.CreateFinancingRequestDto;
 import com.pramila.financing.dto.FinancingRequestResponseDto;
-import com.pramila.financing.entity.FinancingRequest;
+
 import com.pramila.financing.service.FinancingRequestService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -28,5 +28,10 @@ public class FinancingRequestController {
     @GetMapping("/customer/{customerId}")
     public List<FinancingRequestResponseDto> getRequestByCustomer(@PathVariable Long customerId){
         return financingRequestService.getRequestByCustomer(customerId);
+    }
+
+    @GetMapping("/{requestId}")
+    public FinancingRequestResponseDto getFinancingRequestByID(@PathVariable Long requestId){
+        return financingRequestService.getFinancingRequestById(requestId);
     }
 }

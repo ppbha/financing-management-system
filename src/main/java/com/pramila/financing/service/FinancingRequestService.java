@@ -9,6 +9,7 @@ import com.pramila.financing.entity.FinancingRequest;
 import com.pramila.financing.entity.FinancingRequestStatus;
 import com.pramila.financing.exceptions.CustomerNotFoundException;
 import com.pramila.financing.exceptions.FinancingProductNotFoundException;
+import com.pramila.financing.exceptions.FinancingRequestNotFoundException;
 import com.pramila.financing.exceptions.InvalidFinancingRequestException;
 import com.pramila.financing.repository.CustomerRepository;
 import com.pramila.financing.repository.FinancingProductRepository;
@@ -91,5 +92,14 @@ public class FinancingRequestService {
         return  requests.stream()
                 .map((this::mapToResponseDto))
                 .toList();
+    }
+
+    public FinancingRequestResponseDto getFinancingRequestById(Long requestId){
+        FinancingRequest request = financingRequestRepository.findById(requestId)
+                .orElseThrow(()->
+                        new FinancingRequestNotFoundException(
+                                "Financing request not found with id: "+ requestId
+                        ));
+        return mapToResponseDto(request);
     }
 }

@@ -19,9 +19,8 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
         errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
         errorResponse.setMessage(exception.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(errorResponse);
+        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
+
     }
 
     @ExceptionHandler(FinancingProductNotFoundException.class)
@@ -32,9 +31,7 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
         errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
         errorResponse.setMessage(exception.getMessage());
-        return  ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(errorResponse);
+        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidFinancingRequestException.class)
@@ -45,8 +42,17 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setError(HttpStatus.BAD_REQUEST.getReasonPhrase());
         errorResponse.setMessage(exception.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+        return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FinancingRequestNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleFinancingRequestNotFound(FinancingRequestNotFoundException exception){
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
+        errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        errorResponse.setMessage(exception.getMessage());
+        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
     }
 }
