@@ -80,6 +80,12 @@ public class FinancingRequestService {
     }
 
     public List<FinancingRequestResponseDto> getRequestByCustomer(Long customerId){
+
+        customerRepository.findById(customerId)
+                .orElseThrow(()->
+                        new CustomerNotFoundException(
+                                "Customer not found with id: "+ customerId
+                        ));
         List<FinancingRequest> requests = financingRequestRepository.findByCustomerCustomerId(customerId);
 
         return  requests.stream()
